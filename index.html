@@ -216,20 +216,20 @@
             }
         }
 
-        function setLanguage(lang) {
-            currentLanguage = lang;
-            localStorage.setItem('language', lang);
-            document.documentElement.lang = lang;
-            // Update language toggle UI buttons
-            const btns = document.querySelectorAll('.lang-btn');
-            btns.forEach(b => {
-                const isActive = b.dataset.lang === lang;
-                b.classList.toggle('active', isActive);
-                b.setAttribute('aria-pressed', isActive ? 'true' : 'false');
-            });
-            loadPortfolio();
-        }
-
+      function setLanguage(lang) {
+        currentLanguage = lang;
+        localStorage.setItem('language', lang);
+        document.documentElement.lang = lang;
+        // Update language toggle UI buttons
+        const btns = document.querySelectorAll('.lang-btn');
+        btns.forEach(b => {
+            const isActive = b.dataset.lang === lang;
+            b.classList.toggle('active', isActive);
+            b.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+        });
+        // RENDER using the current translations/language
+        renderPortfolioWithTranslations(); 
+    }
         function t(path) {
             const keys = path.split('.');
             let value = translations[currentLanguage];
@@ -310,70 +310,49 @@
             loadTranslations();
         });
 
-        // Load portfolio data from JSON
-        async function loadPortfolio() {
-            try {
-                // Try to fetch the JSON file
-                const response = await fetch('assets/data/portfolio.json');
-                if (!response.ok) throw new Error('Network response was not ok');
-                const data = await response.json();
-                // Convert portfolio.json format to match rendering expectations
-                const portfolio = {
-                    ...data.portfolio,
-                    projects: {
-                        title: t('projects.title'),
-                        items: data.portfolio.projects
-                    },
-                    skills: {
-                        title: t('skills.title'),
-                        items: data.portfolio.skills
-                    }
-                };
-                renderPortfolio(portfolio);
-            } catch (error) {
-                console.error('Error loading portfolio data:', error);
-                renderPortfolioWithTranslations();
-            }
-        }
+     
 
-        function renderPortfolioWithTranslations() {
-            const portfolio = {
-                "title": "Phuwis - Portfolio",
-                "logo": "assets/images/27002.jpg",
-                "navigation": [
-                    { "label": t('nav.home'), "href": "#home" },
-                    { "label": t('nav.projects'), "href": "#projects" },
-                    { "label": t('nav.skills'), "href": "#skills" },
-                    { "label": t('nav.contact'), "href": "#contact" }
-                ],
-                "hero": {
-                    "name": t('hero.name'),
-                    "tagline": t('hero.tagline'),
-                    "cta": t('hero.cta')
-                },
-                "projects": {
-                    "title": t('projects.title'),
-                    "items": translations[currentLanguage]?.projects?.items || []
-                },
-                "skills": {
-                    "title": t('skills.title'),
-                    "items": translations[currentLanguage]?.skills?.items || []
-                },
-                "contact": {
-                    "title": t('contact.title'),
-                    "message": t('contact.message'),
-                    "links": [
-                        { "label": t('contact.email'), "href": "mailto:phuwisw@gmail.com" },
-                        { "label": t('contact.linkedin'), "href": "https://www.linkedin.com/in/phuwis-watthana-8205a437b/", "target": "_blank" },
-                        { "label": t('contact.github'), "href": "https://github.com/phuwis", "target": "_blank" }
-                    ]
-                },
-                "footer": {
-                    "copyright": t('footer.copyright')
-                }
-            };
-            renderPortfolio(portfolio);
-        }
+    function renderPortfolioWithTranslations() {
+        // Construct the full portfolio object entirely from the translations object
+        const portfolio = {
+            "title": t('hero.name') + " - Portfolio", // Dynamic title
+            "logo": "assets/images/27002.jpg", // Hardcoded path
+            "navigation": [
+                { "label": t('nav.home'), "href": "#home" },
+                { "label": t('nav.projects'), "href": "#projects" },
+                { "label": t('nav.skills'), "href": "#skills" },
+                { "label": t('nav.contact'), "href": "#contact" }
+            ],
+            "hero": {
+                "name": t('hero.name'),
+                "tagline": t('hero.tagline'),
+                "cta": t('hero.cta')
+            },
+            "projects": {
+                "title": t('projects.title'),
+                // Safely get project items for the current language
+                "items": translations[currentLanguage]?.projects?.items || [] 
+            },
+            "skills": {
+                "title": t('skills.title'),
+                // Safely get skill items for the current language
+                "items": translations[currentLanguage]?.skills?.items || []
+            },
+            "contact": {
+                "title": t('contact.title'),
+                "message": t('contact.message'),
+                "links": [
+                    { "label": t('contact.email'), "href": "mailto:phuwisw@gmail.com" },
+                    { "label": t('contact.linkedin'), "href": "https://www.linkedin.com/in/phuwis-watthana-8205a437b/", "target": "_blank" },
+                    { "label": t('contact.github'), "href": "https://github.com/phuwis", "target": "_blank" }
+                ]
+            },
+            "footer": {
+                "copyright": t('footer.copyright')
+            }
+        };
+        renderPortfolio(portfolio);
+    }
 
         function renderPortfolio(portfolio) {
             // Update page title
