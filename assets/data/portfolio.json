@@ -1,0 +1,68 @@
+{
+  "portfolio": {
+    "title": "Phuwis - Portfolio",
+    "logo": "assets/images/27002.jpg",
+    "navigation": [
+      { "label": "Home", "href": "#home" },
+      { "label": "Projects", "href": "#projects" },
+      { "label": "Skills", "href": "#skills" },
+      { "label": "Contact", "href": "#contact" }
+    ],
+    "hero": {
+      "name": "Phuwis Watthana for test",
+      "tagline": "Full Stack Developer | Creative Problem Solver",
+      "cta": "View My Work"
+    },
+    "projects": [
+      {
+        "id": 1,
+        "title": "E-Commerce Platform",
+        "description": "A full-stack web application built with React and Node.js. Features include product catalog, shopping cart, and payment integration.",
+        "link": "#"
+      },
+      {
+        "id": 2,
+        "title": "Task Management App",
+        "description": "A productivity tool with real-time collaboration features. Built with React, Firebase, and Material-UI for a modern user experience.",
+        "link": "#"
+      },
+      {
+        "id": 3,
+        "title": "Weather Dashboard",
+        "description": "An interactive weather application using APIs. Displays real-time weather data, forecasts, and location-based information.",
+        "link": "#"
+      }
+    ],
+    "skills": [
+      {
+        "category": "Frontend",
+        "items": "HTML5, CSS3, JavaScript, React, Vue.js, Responsive Design"
+      },
+      {
+        "category": "Backend",
+        "items": "Node.js, Express, Python, MongoDB, PostgreSQL, REST APIs"
+      },
+      {
+        "category": "Tools & Platforms",
+        "items": "Git, Docker, AWS, Firebase, Webpack, VS Code"
+      },
+      {
+        "category": "Soft Skills",
+        "items": "Problem Solving, Communication, Team Collaboration, Project Management"
+      }
+    ],
+    "contact": {
+      "title": "Get In Touch",
+      "message": "I'm always interested in hearing about new projects and opportunities.",
+      "links": [
+        { "label": "Email", "href": "mailto:john@example.com" },
+        { "label": "LinkedIn", "href": "https://linkedin.com/in/johndoe", "target": "_blank" },
+        { "label": "GitHub", "href": "https://github.com/johndoe", "target": "_blank" },
+        { "label": "Twitter", "href": "https://twitter.com/johndoe", "target": "_blank" }
+      ]
+    },
+    "footer": {
+      "copyright": "© 2025 Phuwis Watthana. All rights reserved."
+    }
+  }
+}
