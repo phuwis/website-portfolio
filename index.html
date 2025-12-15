@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="page-title">Portfolio</title>
     <link rel="stylesheet" href="index.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai+Looped:wght@100..900&family=Noto+Serif+Thai:wght@100..900&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -15,10 +18,17 @@
             <img id="logo" src="" alt="Logo" class="logo">
             <div style="display:flex;align-items:center;gap:1rem">
                 <ul id="nav-menu"></ul>
+                <div class="language-toggle" role="tablist" aria-label="Language switch">
+                    <button class="lang-btn" data-lang="en" aria-pressed="false">EN</button>
+                    <button class="lang-btn" data-lang="th" aria-pressed="false">ไทย</button>
+                </div>
                 <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">🌙</button>
             </div>
         </nav>
     </header>
+
+    <!-- Mobile Floating Theme Button -->
+    <button id="theme-toggle-mobile" class="theme-toggle-mobile" aria-label="Toggle theme">🌙</button>
 
     <!-- Hero Section -->
     <section class="hero" id="home">
@@ -30,7 +40,7 @@
     <!-- Projects Section -->
     <section class="section" id="projects">
         <div class="container">
-            <h2>Featured Projects</h2>
+            <h2 id="projects-title"></h2>
             <div class="projects" id="projects-container"></div>
         </div>
     </section>
@@ -38,7 +48,7 @@
     <!-- Skills Section -->
     <section class="section" id="skills">
         <div class="container card">
-            <h2>Skills</h2>
+            <h2 id="skills-title"></h2>
             <div class="skills" id="skills-container"></div>
         </div>
     </section>
@@ -59,6 +69,176 @@
     </footer>
 
     <script>
+        let translations = {};
+        let currentLanguage = localStorage.getItem('language') || 'en';
+
+        // Load translations
+        async function loadTranslations() {
+            try {
+                const response = await fetch('assets/data/translations.json');
+                if (!response.ok) throw new Error('Failed to load translations');
+                translations = await response.json();
+                setLanguage(currentLanguage);
+            } catch (error) {
+                console.error('Error loading translations:', error);
+                // Fallback: Use inline translations
+                translations = {
+                    "en": {
+                        "nav": {
+                            "home": "Home",
+                            "projects": "Projects",
+                            "skills": "Skills",
+                            "contact": "Contact"
+                        },
+                        "hero": {
+                            "name": "Phuwis Watthana",
+                            "tagline": "Full Stack Developer | Creative Problem Solver",
+                            "cta": "View My Work"
+                        },
+                        "projects": {
+                            "title": "Featured Projects",
+                            "items": [
+                                {
+                                    "title": "E-Commerce Platform",
+                                    "description": "A full-stack web application built with React and Node.js. Features include product catalog, shopping cart, and payment integration.",
+                                    "link": "#"
+                                },
+                                {
+                                    "title": "Task Management App",
+                                    "description": "A productivity tool with real-time collaboration features. Built with React, Firebase, and Material-UI for a modern user experience.",
+                                    "link": "#"
+                                },
+                                {
+                                    "title": "Weather Dashboard",
+                                    "description": "An interactive weather application using APIs. Displays real-time weather data, forecasts, and location-based information.",
+                                    "link": "#"
+                                }
+                            ]
+                        },
+                        "skills": {
+                            "title": "Skills",
+                            "items": [
+                                {
+                                    "category": "Frontend Development",
+                                    "items": "React, NextJS, Vue.js, TypeScript, HTML5, CSS3, JavaScript, Flutter, Responsive Design"
+                                },
+                                {
+                                    "category": "Backend Development",
+                                    "items": "Node.js, Express, Python, REST APIs, MongoDB, PostgreSQL"
+                                },
+                                {
+                                    "category": "DevOps & Infrastructure",
+                                    "items": "Docker, AWS, Firebase, Git, Webpack, CI/CD"
+                                },
+                                {
+                                    "category": "Core Competencies",
+                                    "items": "System Design, Full-Stack Architecture, Problem Solving, Code Quality, Agile Development"
+                                }
+                            ]
+                        },
+                        "contact": {
+                            "title": "Get In Touch",
+                            "message": "I'm actively seeking full-time IT Solutions Architect opportunities. Let's connect to discuss how I can contribute to your organization.",
+                            "email": "Email",
+                            "linkedin": "LinkedIn",
+                            "github": "GitHub"
+                        },
+                        "footer": {
+                            "copyright": "© 2025 Phuwis Watthana. All rights reserved."
+                        }
+                    },
+                    "th": {
+                        "nav": {
+                            "home": "หน้าแรก",
+                            "projects": "โครงการ",
+                            "skills": "ทักษะ",
+                            "contact": "ติดต่อ"
+                        },
+                        "hero": {
+                            "name": "ภูวิศ วัฒนะ",
+                            "tagline": "นักพัฒนาเต็มสแต็ก | ผู้แก้ปัญหาที่สร้างสรรค์",
+                            "cta": "ดูผลงานของฉัน"
+                        },
+                        "projects": {
+                            "title": "โครงการที่นำเสนอ",
+                            "items": [
+                                {
+                                    "title": "แพลตฟอร์มอีคอมเมิร์ซ",
+                                    "description": "แอปพลิเคชันเว็บแบบเต็มสแต็กที่สร้างด้วย React และ Node.js มีฟีเจอร์ประกอบด้วยแคตตาล็อกสินค้า ตะกร้าการซื้อ และการรวมเข้าด้วย",
+                                    "link": "#"
+                                },
+                                {
+                                    "title": "แอปจัดการงาน",
+                                    "description": "เครื่องมือผลผลิตที่มีฟีเจอร์การทำงานร่วมกันแบบเรียลไทม์ สร้างด้วย React, Firebase และ Material-UI สำหรับประสบการณ์ผู้ใช้ที่ทันสมัย",
+                                    "link": "#"
+                                },
+                                {
+                                    "title": "แดชบอร์ดอากาศ",
+                                    "description": "แอปพลิเคชันสภาอากาศแบบโต้ตอบที่ใช้ API แสดงข้อมูลอากาศแบบเรียลไทม์ การพยากรณ์ และข้อมูลตามสถานที่",
+                                    "link": "#"
+                                }
+                            ]
+                        },
+                        "skills": {
+                            "title": "ทักษะ",
+                            "items": [
+                                {
+                                    "category": "การพัฒนา Frontend",
+                                    "items": "React, NextJS, Vue.js, TypeScript, HTML5, CSS3, JavaScript, Flutter, Responsive Design"
+                                },
+                                {
+                                    "category": "การพัฒนา Backend",
+                                    "items": "Node.js, Express, Python, REST APIs, MongoDB, PostgreSQL"
+                                },
+                                {
+                                    "category": "DevOps และโครงสร้างพื้นฐาน",
+                                    "items": "Docker, AWS, Firebase, Git, Webpack, CI/CD"
+                                },
+                                {
+                                    "category": "ทักษะหลัก",
+                                    "items": "การออกแบบระบบ สถาปัตยกรรมแบบเต็มสแต็ก การแก้ปัญหา คุณภาพโค้ด การพัฒนา Agile"
+                                }
+                            ]
+                        },
+                        "contact": {
+                            "title": "ติดต่อฉัน",
+                            "message": "ฉันกำลังมองหาโอกาสงานแบบเต็มเวลาในตำแหน่ง IT Solutions Architect มาติดต่อเพื่อคุยกันว่าฉันสามารถมีส่วนร่วมต่ออาจารย์ของคุณได้อย่างไร",
+                            "email": "อีเมล",
+                            "linkedin": "LinkedIn",
+                            "github": "GitHub"
+                        },
+                        "footer": {
+                            "copyright": "© 2025 ภูวิศ วัฒนะ สงวนลิขสิทธิ์"
+                        }
+                    }
+                }
+                setLanguage(currentLanguage);
+            }
+        }
+
+        function setLanguage(lang) {
+            currentLanguage = lang;
+            localStorage.setItem('language', lang);
+            document.documentElement.lang = lang;
+            // Update language toggle UI buttons
+            const btns = document.querySelectorAll('.lang-btn');
+            btns.forEach(b => {
+                const isActive = b.dataset.lang === lang;
+                b.classList.toggle('active', isActive);
+                b.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+            });
+            loadPortfolio();
+        }
+
+        function t(path) {
+            const keys = path.split('.');
+            let value = translations[currentLanguage];
+            for (let key of keys) {
+                value = value?.[key];
+            }
+            return value || path;
+        }
+
         // Theme switcher with localStorage
         function initTheme() {
             const stored = localStorage.getItem('theme') || 'light';
@@ -68,7 +248,9 @@
 
         function updateThemeToggle(theme) {
             const btn = document.getElementById('theme-toggle');
+            const btnMobile = document.getElementById('theme-toggle-mobile');
             if (btn) btn.textContent = theme === 'dark' ? '☀️' : '🌙';
+            if (btnMobile) btnMobile.textContent = theme === 'dark' ? '☀️' : '🌙';
         }
 
         function toggleTheme() {
@@ -77,13 +259,20 @@
             document.documentElement.setAttribute('data-theme', next);
             localStorage.setItem('theme', next);
             updateThemeToggle(next);
-            
-            // Animate the toggle button
+
+            // Animate both toggle buttons
             const btn = document.getElementById('theme-toggle');
+            const btnMobile = document.getElementById('theme-toggle-mobile');
             if (btn) {
                 btn.style.animation = 'spin 0.6s ease-in-out';
                 setTimeout(() => {
                     btn.style.animation = '';
+                }, 600);
+            }
+            if (btnMobile) {
+                btnMobile.style.animation = 'spin 0.6s ease-in-out';
+                setTimeout(() => {
+                    btnMobile.style.animation = '';
                 }, 600);
             }
         }
@@ -91,7 +280,7 @@
         // Scroll-triggered animations using Intersection Observer
         function initScrollAnimations() {
             const revealElements = document.querySelectorAll('.project-card, .skill-item, .section h2, #contact-title, #contact-message, .contact-links');
-            
+
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
@@ -110,8 +299,15 @@
         document.addEventListener('DOMContentLoaded', () => {
             initTheme();
             const toggle = document.getElementById('theme-toggle');
+            const toggleMobile = document.getElementById('theme-toggle-mobile');
             if (toggle) toggle.addEventListener('click', toggleTheme);
-            loadPortfolio();
+            if (toggleMobile) toggleMobile.addEventListener('click', toggleTheme);
+            // Language toggle buttons
+            const langButtons = document.querySelectorAll('.lang-btn');
+            if (langButtons.length) {
+                langButtons.forEach(b => b.addEventListener('click', () => setLanguage(b.dataset.lang)));
+            }
+            loadTranslations();
         });
 
         // Load portfolio data from JSON
@@ -121,78 +317,62 @@
                 const response = await fetch('assets/data/portfolio.json');
                 if (!response.ok) throw new Error('Network response was not ok');
                 const data = await response.json();
-                renderPortfolio(data.portfolio);
-            } catch (error) {
-                console.error('Error loading portfolio data:', error);
-                // Fallback: Use inline data
-                console.log('Using fallback data');
-                const fallbackData = {
-                    "title": "Phuwis - Portfolio",
-                    "logo": "assets/images/27002.jpg",
-                    "navigation": [
-                        { "label": "Home", "href": "#home" },
-                        { "label": "Projects", "href": "#projects" },
-                        { "label": "Skills", "href": "#skills" },
-                        { "label": "Contact", "href": "#contact" }
-                    ],
-                    "hero": {
-                        "name": "Phuwis Watthana",
-                        "tagline": "Full Stack Developer | Creative Problem Solver",
-                        "cta": "View My Work"
+                // Convert portfolio.json format to match rendering expectations
+                const portfolio = {
+                    ...data.portfolio,
+                    projects: {
+                        title: t('projects.title'),
+                        items: data.portfolio.projects
                     },
-                    "projects": [
-                        {
-                            "id": 1,
-                            "title": "E-Commerce Platform",
-                            "description": "A full-stack web application built with React and Node.js. Features include product catalog, shopping cart, and payment integration.",
-                            "link": "#"
-                        },
-                        {
-                            "id": 2,
-                            "title": "Task Management App",
-                            "description": "A productivity tool with real-time collaboration features. Built with React, Firebase, and Material-UI for a modern user experience.",
-                            "link": "#"
-                        },
-                        {
-                            "id": 3,
-                            "title": "Weather Dashboard",
-                            "description": "An interactive weather application using APIs. Displays real-time weather data, forecasts, and location-based information.",
-                            "link": "#"
-                        }
-                    ],
-                    "skills": [
-                        {
-                            "category": "Frontend Development",
-                            "items": "React, NextJS, Vue.js, TypeScript, HTML5, CSS3, JavaScript, Flutter, Responsive Design"
-                        },
-                        {
-                            "category": "Backend Development",
-                            "items": "Node.js, Express, Python, REST APIs, MongoDB, PostgreSQL"
-                        },
-                        {
-                            "category": "DevOps & Infrastructure",
-                            "items": "Docker, AWS, Firebase, Git, Webpack, CI/CD"
-                        },
-                        {
-                            "category": "Core Competencies",
-                            "items": "System Design, Full-Stack Architecture, Problem Solving, Code Quality, Agile Development"
-                        }
-                    ],
-                    "contact": {
-                        "title": "Get In Touch",
-                        "message": "I'm actively seeking full-time IT Solutions Architect opportunities. Let's connect to discuss how I can contribute to your organization.",
-                        "links": [
-                            { "label": "Email",   "href": "mailto:phuwisw@gmail.com" },
-                            { "label": "LinkedIn", "href": "https://www.linkedin.com/in/phuwis-watthana-8205a437b/", "target": "_blank" },
-                            { "label": "GitHub", "href": "https://github.com/phuwis", "target": "_blank" },
-                        ]
-                    },
-                    "footer": {
-                        "copyright": "© 2025 Phuwis Watthana. All rights reserved."
+                    skills: {
+                        title: t('skills.title'),
+                        items: data.portfolio.skills
                     }
                 };
-                renderPortfolio(fallbackData);
+                renderPortfolio(portfolio);
+            } catch (error) {
+                console.error('Error loading portfolio data:', error);
+                renderPortfolioWithTranslations();
             }
+        }
+
+        function renderPortfolioWithTranslations() {
+            const portfolio = {
+                "title": "Phuwis - Portfolio",
+                "logo": "assets/images/27002.jpg",
+                "navigation": [
+                    { "label": t('nav.home'), "href": "#home" },
+                    { "label": t('nav.projects'), "href": "#projects" },
+                    { "label": t('nav.skills'), "href": "#skills" },
+                    { "label": t('nav.contact'), "href": "#contact" }
+                ],
+                "hero": {
+                    "name": t('hero.name'),
+                    "tagline": t('hero.tagline'),
+                    "cta": t('hero.cta')
+                },
+                "projects": {
+                    "title": t('projects.title'),
+                    "items": translations[currentLanguage]?.projects?.items || []
+                },
+                "skills": {
+                    "title": t('skills.title'),
+                    "items": translations[currentLanguage]?.skills?.items || []
+                },
+                "contact": {
+                    "title": t('contact.title'),
+                    "message": t('contact.message'),
+                    "links": [
+                        { "label": t('contact.email'), "href": "mailto:phuwisw@gmail.com" },
+                        { "label": t('contact.linkedin'), "href": "https://www.linkedin.com/in/phuwis-watthana-8205a437b/", "target": "_blank" },
+                        { "label": t('contact.github'), "href": "https://github.com/phuwis", "target": "_blank" }
+                    ]
+                },
+                "footer": {
+                    "copyright": t('footer.copyright')
+                }
+            };
+            renderPortfolio(portfolio);
         }
 
         function renderPortfolio(portfolio) {
@@ -205,6 +385,7 @@
 
             // Update navigation
             const navMenu = document.getElementById('nav-menu');
+            navMenu.innerHTML = '';
             portfolio.navigation.forEach(item => {
                 const li = document.createElement('li');
                 const a = document.createElement('a');
@@ -219,13 +400,21 @@
             document.getElementById('hero-tagline').textContent = portfolio.hero.tagline;
             document.getElementById('hero-cta').textContent = portfolio.hero.cta;
 
+            // Handle projects (could be array or object with items)
+            const projectsData = Array.isArray(portfolio.projects) ? portfolio.projects : portfolio.projects?.items || [];
+            const projectsTitle = portfolio.projects?.title || t('projects.title');
+
+            // Update projects title
+            document.getElementById('projects-title').textContent = projectsTitle;
+
             // Update projects
             const projectsContainer = document.getElementById('projects-container');
-            portfolio.projects.forEach(project => {
+            projectsContainer.innerHTML = '';
+            projectsData.forEach((project, idx) => {
                 const card = document.createElement('div');
                 card.className = 'project-card';
                 card.innerHTML = `
-                    <div class="project-image">Project ${project.id}</div>
+                    <div class="project-image">Project ${idx + 1}</div>
                     <div class="project-info">
                         <h3>${project.title}</h3>
                         <p>${project.description}</p>
@@ -235,9 +424,17 @@
                 projectsContainer.appendChild(card);
             });
 
+            // Handle skills (could be array or object with items)
+            const skillsData = Array.isArray(portfolio.skills) ? portfolio.skills : portfolio.skills?.items || [];
+            const skillsTitle = portfolio.skills?.title || t('skills.title');
+
+            // Update skills title
+            document.getElementById('skills-title').textContent = skillsTitle;
+
             // Update skills
             const skillsContainer = document.getElementById('skills-container');
-            portfolio.skills.forEach(skill => {
+            skillsContainer.innerHTML = '';
+            skillsData.forEach(skill => {
                 const item = document.createElement('div');
                 item.className = 'skill-item';
                 item.innerHTML = `
@@ -252,17 +449,19 @@
             document.getElementById('contact-message').textContent = portfolio.contact.message;
 
             const contactLinks = document.getElementById('contact-links');
+            contactLinks.innerHTML = '';
             portfolio.contact.links.forEach(link => {
                 const a = document.createElement('a');
                 a.href = link.href;
                 a.textContent = link.label;
                 if (link.target) a.target = link.target;
+                a.style.display = 'inline-block';
                 contactLinks.appendChild(a);
             });
 
             // Update footer
             document.getElementById('footer-text').textContent = portfolio.footer.copyright;
-            
+
             // Re-initialize scroll animations after content is rendered
             initScrollAnimations();
         }
@@ -303,8 +502,9 @@
                         ev.preventDefault();
                         const email = a.href.replace('mailto:', '');
                         navigator.clipboard?.writeText(email).then(() => {
-                            a.textContent = 'Email (copied)';
-                            setTimeout(() => a.textContent = 'Email', 1500);
+                            const originalText = a.textContent;
+                            a.textContent = originalText + ' (copied)';
+                            setTimeout(() => a.textContent = originalText, 1500);
                         }).catch(() => {
                             // fallback: open mail client
                             window.location.href = a.href;
@@ -405,4 +605,5 @@
         });
     </script>
 </body>
+
 </html>

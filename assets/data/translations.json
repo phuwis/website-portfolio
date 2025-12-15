@@ -1,0 +1,130 @@
+{
+  "en": {
+    "nav": {
+      "home": "Home",
+      "projects": "Projects",
+      "skills": "Skills",
+      "contact": "Contact"
+    },
+    "hero": {
+      "name": "Phuwis Watthana",
+      "tagline": "Full Stack Developer | Creative Problem Solver",
+      "cta": "View My Work"
+    },
+    "projects": {
+      "title": "Featured Projects",
+      "items": [
+        {
+          "title": "E-Commerce Platform",
+          "description": "A full-stack web application built with React and Node.js. Features include product catalog, shopping cart, and payment integration.",
+          "link": "#"
+        },
+        {
+          "title": "Task Management App",
+          "description": "A productivity tool with real-time collaboration features. Built with React, Firebase, and Material-UI for a modern user experience.",
+          "link": "#"
+        },
+        {
+          "title": "Weather Dashboard",
+          "description": "An interactive weather application using APIs. Displays real-time weather data, forecasts, and location-based information.",
+          "link": "#"
+        }
+      ]
+    },
+    "skills": {
+      "title": "Skills",
+      "items": [
+        {
+          "category": "Frontend Development",
+          "items": "React, NextJS, Vue.js, TypeScript, HTML5, CSS3, JavaScript, Flutter, Responsive Design"
+        },
+        {
+          "category": "Backend Development",
+          "items": "Node.js, Express, Python, REST APIs, MongoDB, PostgreSQL"
+        },
+        {
+          "category": "DevOps & Infrastructure",
+          "items": "Docker, AWS, Firebase, Git, Webpack, CI/CD"
+        },
+        {
+          "category": "Core Competencies",
+          "items": "System Design, Full-Stack Architecture, Problem Solving, Code Quality, Agile Development"
+        }
+      ]
+    },
+    "contact": {
+      "title": "Get In Touch",
+      "message": "I'm actively seeking full-time IT Solutions Architect opportunities. Let's connect to discuss how I can contribute to your organization.",
+      "email": "Email",
+      "linkedin": "LinkedIn",
+      "github": "GitHub"
+    },
+    "footer": {
+      "copyright": "© 2025 Phuwis Watthana. All rights reserved."
+    }
+  },
+  "th": {
+    "nav": {
+      "home": "หน้าแรก",
+      "projects": "โครงการ",
+      "skills": "ทักษะ",
+      "contact": "ติดต่อ"
+    },
+    "hero": {
+      "name": "ภูวิศ วัฒนะ",
+      "tagline": "นักพัฒนาเต็มสแต็ก | ผู้แก้ปัญหาที่สร้างสรรค์",
+      "cta": "ดูผลงานของฉัน"
+    },
+    "projects": {
+      "title": "โครงการที่นำเสนอ",
+      "items": [
+        {
+          "title": "แพลตฟอร์มอีคอมเมิร์ซ",
+          "description": "แอปพลิเคชันเว็บแบบเต็มสแต็กที่สร้างด้วย React และ Node.js มีฟีเจอร์ประกอบด้วยแคตตาล็อกสินค้า ตะกร้าการซื้อ และการรวมเข้าด้วย",
+          "link": "#"
+        },
+        {
+          "title": "แอปจัดการงาน",
+          "description": "เครื่องมือผลผลิตที่มีฟีเจอร์การทำงานร่วมกันแบบเรียลไทม์ สร้างด้วย React, Firebase และ Material-UI สำหรับประสบการณ์ผู้ใช้ที่ทันสมัย",
+          "link": "#"
+        },
+        {
+          "title": "แดชบอร์ดอากาศ",
+          "description": "แอปพลิเคชันสภาอากาศแบบโต้ตอบที่ใช้ API แสดงข้อมูลอากาศแบบเรียลไทม์ การพยากรณ์ และข้อมูลตามสถานที่",
+          "link": "#"
+        }
+      ]
+    },
+    "skills": {
+      "title": "ทักษะ",
+      "items": [
+        {
+          "category": "การพัฒนา Frontend",
+          "items": "React, NextJS, Vue.js, TypeScript, HTML5, CSS3, JavaScript, Flutter, Responsive Design"
+        },
+        {
+          "category": "การพัฒนา Backend",
+          "items": "Node.js, Express, Python, REST APIs, MongoDB, PostgreSQL"
+        },
+        {
+          "category": "DevOps และโครงสร้างพื้นฐาน",
+          "items": "Docker, AWS, Firebase, Git, Webpack, CI/CD"
+        },
+        {
+          "category": "ทักษะหลัก",
+          "items": "การออกแบบระบบ สถาปัตยกรรมแบบเต็มสแต็ก การแก้ปัญหา คุณภาพโค้ด การพัฒนา Agile"
+        }
+      ]
+    },
+    "contact": {
+      "title": "ติดต่อฉัน",
+      "message": "ฉันกำลังมองหาโอกาสงานแบบเต็มเวลาในตำแหน่ง IT Solutions Architect มาติดต่อเพื่อคุยกันว่าฉันสามารถมีส่วนร่วมต่ออาจารย์ของคุณได้อย่างไร",
+      "email": "อีเมล",
+      "linkedin": "LinkedIn",
+      "github": "GitHub"
+    },
+    "footer": {
+      "copyright": "© 2025 ภูวิศ วัฒนะ สงวนลิขสิทธิ์"
+    }
+  }
+}
