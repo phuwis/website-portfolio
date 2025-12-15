@@ -1,17 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="page-title">Portfolio</title>
     <link rel="stylesheet" href="index.css">
 </head>
+
 <body>
     <!-- Navigation -->
     <header>
         <nav>
             <img id="logo" src="" alt="Logo" class="logo">
-            <ul id="nav-menu"></ul>
+            <div style="display:flex;align-items:center;gap:1rem">
+                <ul id="nav-menu"></ul>
+                <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">🌙</button>
+            </div>
         </nav>
     </header>
 
@@ -32,7 +37,7 @@
 
     <!-- Skills Section -->
     <section class="section" id="skills">
-        <div class="container">
+        <div class="container card">
             <h2>Skills</h2>
             <div class="skills" id="skills-container"></div>
         </div>
@@ -43,6 +48,7 @@
         <div class="container">
             <h2 id="contact-title"></h2>
             <p id="contact-message"></p>
+            <div class="space"></div>
             <div class="contact-links" id="contact-links"></div>
         </div>
     </section>
@@ -53,6 +59,61 @@
     </footer>
 
     <script>
+        // Theme switcher with localStorage
+        function initTheme() {
+            const stored = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', stored);
+            updateThemeToggle(stored);
+        }
+
+        function updateThemeToggle(theme) {
+            const btn = document.getElementById('theme-toggle');
+            if (btn) btn.textContent = theme === 'dark' ? '☀️' : '🌙';
+        }
+
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme') || 'light';
+            const next = current === 'light' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+            updateThemeToggle(next);
+            
+            // Animate the toggle button
+            const btn = document.getElementById('theme-toggle');
+            if (btn) {
+                btn.style.animation = 'spin 0.6s ease-in-out';
+                setTimeout(() => {
+                    btn.style.animation = '';
+                }, 600);
+            }
+        }
+
+        // Scroll-triggered animations using Intersection Observer
+        function initScrollAnimations() {
+            const revealElements = document.querySelectorAll('.project-card, .skill-item, .section h2, #contact-title, #contact-message, .contact-links');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.15, rootMargin: '0px 0px -100px 0px' });
+
+            revealElements.forEach(el => {
+                el.classList.add('scroll-reveal');
+                observer.observe(el);
+            });
+        }
+
+        // Attach toggle listener when DOM is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            initTheme();
+            const toggle = document.getElementById('theme-toggle');
+            if (toggle) toggle.addEventListener('click', toggleTheme);
+            loadPortfolio();
+        });
+
         // Load portfolio data from JSON
         async function loadPortfolio() {
             try {
@@ -100,19 +161,30 @@
                         }
                     ],
                     "skills": [
-                        { "category": "Frontend", "items": "HTML5, CSS3, JavaScript, React, Vue.js, Responsive Design" },
-                        { "category": "Backend", "items": "Node.js, Express, Python, MongoDB, PostgreSQL, REST APIs" },
-                        { "category": "Tools & Platforms", "items": "Git, Docker, AWS, Firebase, Webpack, VS Code" },
-                        { "category": "Soft Skills", "items": "Problem Solving, Communication, Team Collaboration, Project Management" }
+                        {
+                            "category": "Frontend Development",
+                            "items": "React, NextJS, Vue.js, TypeScript, HTML5, CSS3, JavaScript, Flutter, Responsive Design"
+                        },
+                        {
+                            "category": "Backend Development",
+                            "items": "Node.js, Express, Python, REST APIs, MongoDB, PostgreSQL"
+                        },
+                        {
+                            "category": "DevOps & Infrastructure",
+                            "items": "Docker, AWS, Firebase, Git, Webpack, CI/CD"
+                        },
+                        {
+                            "category": "Core Competencies",
+                            "items": "System Design, Full-Stack Architecture, Problem Solving, Code Quality, Agile Development"
+                        }
                     ],
                     "contact": {
                         "title": "Get In Touch",
-                        "message": "I'm always interested in hearing about new projects and opportunities.",
+                        "message": "I'm actively seeking full-time IT Solutions Architect opportunities. Let's connect to discuss how I can contribute to your organization.",
                         "links": [
-                            { "label": "Email", "href": "mailto:john@example.com" },
-                            { "label": "LinkedIn", "href": "https://linkedin.com/in/johndoe", "target": "_blank" },
-                            { "label": "GitHub", "href": "https://github.com/johndoe", "target": "_blank" },
-                            { "label": "Twitter", "href": "https://twitter.com/johndoe", "target": "_blank" }
+                            { "label": "Email",   "href": "mailto:phuwisw@gmail.com" },
+                            { "label": "LinkedIn", "href": "https://www.linkedin.com/in/phuwis-watthana-8205a437b/", "target": "_blank" },
+                            { "label": "GitHub", "href": "https://github.com/phuwis", "target": "_blank" },
                         ]
                     },
                     "footer": {
@@ -190,13 +262,13 @@
 
             // Update footer
             document.getElementById('footer-text').textContent = portfolio.footer.copyright;
+            
+            // Re-initialize scroll animations after content is rendered
+            initScrollAnimations();
         }
 
-        // Load portfolio on page load
-        document.addEventListener('DOMContentLoaded', loadPortfolio);
-
         // Smooth scrolling for navigation links
-        document.addEventListener('click', function(e) {
+        document.addEventListener('click', function (e) {
             if (e.target.tagName === 'A' && e.target.getAttribute('href').startsWith('#')) {
                 e.preventDefault();
                 const target = document.querySelector(e.target.getAttribute('href'));
@@ -206,6 +278,129 @@
                         block: 'start'
                     });
                 }
+            }
+        });
+        // After rendering, attach interactive handlers
+        function attachInteractions() {
+            // Make project cards keyboard/click accessible and open modal
+            const projects = document.querySelectorAll('.project-card');
+            projects.forEach((card, idx) => {
+                card.tabIndex = 0;
+                card.setAttribute('role', 'button');
+                card.addEventListener('click', () => openProjectModal(idx));
+                card.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openProjectModal(idx); } });
+                card.addEventListener('mouseover', () => card.classList.add('hover'));
+                card.addEventListener('mouseout', () => card.classList.remove('hover'));
+            });
+
+            // Contact links: copy email on click if mailto
+            const contactLinks = document.querySelectorAll('#contact-links a');
+            contactLinks.forEach(a => {
+                a.tabIndex = 0;
+                a.addEventListener('keydown', (e) => { if (e.key === 'Enter') a.click(); });
+                if (a.href && a.href.startsWith('mailto:')) {
+                    a.addEventListener('click', (ev) => {
+                        ev.preventDefault();
+                        const email = a.href.replace('mailto:', '');
+                        navigator.clipboard?.writeText(email).then(() => {
+                            a.textContent = 'Email (copied)';
+                            setTimeout(() => a.textContent = 'Email', 1500);
+                        }).catch(() => {
+                            // fallback: open mail client
+                            window.location.href = a.href;
+                        });
+                    });
+                }
+            });
+
+            // Nav links: keyboard navigation support
+            const navLinks = document.querySelectorAll('#nav-menu a');
+            navLinks.forEach((link, i) => {
+                link.tabIndex = 0;
+                link.addEventListener('keydown', (e) => {
+                    if (e.key === 'ArrowRight') navLinks[(i + 1) % navLinks.length].focus();
+                    if (e.key === 'ArrowLeft') navLinks[(i - 1 + navLinks.length) % navLinks.length].focus();
+                });
+            });
+        }
+
+        // Simple modal implementation
+        const modal = (() => {
+            let currentIndex = null;
+            const modalEl = document.createElement('div');
+            modalEl.id = 'modal';
+            modalEl.className = 'modal';
+            modalEl.innerHTML = `
+                <div class="modal-backdrop" data-close></div>
+                <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+                    <button class="modal-close" aria-label="Close" data-close>×</button>
+                    <h3 id="modal-title"></h3>
+                    <p id="modal-body"></p>
+                    <a id="modal-link" class="project-link" href="#" target="_blank">Open Project</a>
+                </div>
+            `;
+            document.body.appendChild(modalEl);
+
+            function open(index, project) {
+                currentIndex = index;
+                modalEl.querySelector('#modal-title').textContent = project.title;
+                modalEl.querySelector('#modal-body').textContent = project.description;
+                const link = modalEl.querySelector('#modal-link');
+                link.href = project.link || '#';
+                modalEl.classList.add('open');
+                modalEl.setAttribute('aria-hidden', 'false');
+                // trap focus
+                modalEl.querySelector('.modal-close').focus();
+                document.addEventListener('keydown', onKey);
+            }
+
+            function close() {
+                modalEl.classList.remove('open');
+                modalEl.setAttribute('aria-hidden', 'true');
+                document.removeEventListener('keydown', onKey);
+            }
+
+            function onKey(e) {
+                if (e.key === 'Escape') close();
+            }
+
+            modalEl.addEventListener('click', (ev) => {
+                if (ev.target.matches('[data-close]')) close();
+            });
+
+            return { open, close };
+        })();
+
+        function openProjectModal(idx) {
+            // get project data from DOM: index matches order
+            const projects = document.querySelectorAll('#projects-container .project-card');
+            const p = projects[idx];
+            if (!p) return;
+            const title = p.querySelector('h3')?.textContent || 'Project';
+            const desc = p.querySelector('p')?.textContent || '';
+            const link = p.querySelector('a.project-link')?.href || '#';
+            modal.open(idx, { title, description: desc, link });
+        }
+
+        // Re-run attachInteractions after portfolio is rendered
+        const observer = new MutationObserver((m) => {
+            const projectsContainer = document.getElementById('projects-container');
+            if (projectsContainer && projectsContainer.children.length) {
+                attachInteractions();
+                observer.disconnect();
+            }
+        });
+        observer.observe(document.body, { childList: true, subtree: true });
+
+        // Smooth scrolling for navigation links (delegated)
+        document.addEventListener('click', function (e) {
+            const el = e.target.closest('a');
+            if (!el) return;
+            const href = el.getAttribute('href');
+            if (href && href.startsWith('#')) {
+                e.preventDefault();
+                const target = document.querySelector(href);
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         });
     </script>
