@@ -15,14 +15,16 @@
     <!-- Navigation -->
     <header>
         <nav>
-            <img id="logo" src="" alt="Logo" class="logo">
-            <div style="display:flex;align-items:center;gap:1rem">
-                <ul id="nav-menu"></ul>
-                <div class="language-toggle" role="tablist" aria-label="Language switch">
-                    <button class="lang-btn" data-lang="en" aria-pressed="false">EN</button>
-                    <button class="lang-btn" data-lang="th" aria-pressed="false">ไทย</button>
+            <div style="display:flex;justify-content: space-between; align-items:center;gap:1rem;width: 100%;">
+                <img id="logo" src="" alt="Logo" class="logo">
+                <div style="display:flex;align-items:center;gap:1rem;">
+                    <ul id="nav-menu"></ul>
+                    <div class="language-toggle" role="tablist" aria-label="Language switch">
+                        <button class="lang-btn" data-lang="en" aria-pressed="false">EN</button>
+                        <button class="lang-btn" data-lang="th" aria-pressed="false">ไทย</button>
+                    </div>
+                    <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">🌙</button>
                 </div>
-                <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">🌙</button>
             </div>
         </nav>
     </header>
@@ -31,11 +33,13 @@
     <button id="theme-toggle-mobile" class="theme-toggle-mobile" aria-label="Toggle theme">🌙</button>
 
     <!-- Hero Section -->
-    <section class="hero" id="home">
+<section class="hero" id="home">
+    <div id="hero-content"> 
         <h1 id="hero-name"></h1>
         <p id="hero-tagline"></p>
         <a href="#projects" class="cta-button" id="hero-cta"></a>
-    </section>
+    </div>
+</section>
 
     <!-- Projects Section -->
     <section class="section" id="projects">
@@ -316,7 +320,7 @@
         // Construct the full portfolio object entirely from the translations object
         const portfolio = {
             "title": t('hero.name') + " - Portfolio", // Dynamic title
-            "logo": "assets/images/27002.jpg", // Hardcoded path
+            "logo": "assets/images/Placeholder_Person.jpg", // Hardcoded path
             "navigation": [
                 { "label": t('nav.home'), "href": "#home" },
                 { "label": t('nav.projects'), "href": "#projects" },
@@ -582,6 +586,72 @@
                 if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         });
+
+    document.addEventListener('DOMContentLoaded', function() {
+    const heroSection = document.querySelector('.hero');
+    const heroContent = document.getElementById('hero-content');
+    
+    if (!heroSection || !heroContent) return;
+
+    function handleScroll() {
+        const scrollPosition = window.scrollY;
+        const heroTop = heroSection.offsetTop;
+        const heroHeight = heroSection.offsetHeight;
+        
+        // The point where the fixed content should be released/pinned
+        const releasePoint = heroTop + heroHeight - heroContent.offsetHeight;
+
+        // --------------------------------------------------------
+        // 🔑 1. OPACITY CALCULATION (Scroll-Linked Fade)
+        // --------------------------------------------------------
+        
+        const scrolledIntoHero = scrollPosition - heroTop;
+
+        // Define the range over which the fade should occur.
+        // E.g., fade over the middle 80% of the section's height.
+        const fadeStartPoint = heroHeight * 0.20; // Start fading after scrolling 20%
+        const fadeRange = heroHeight * 0.50;      // Fade happens over the next 80%
+        
+        // Calculate progress through the fade range (0 to 1)
+        let progress = (scrolledIntoHero - fadeStartPoint) / fadeRange;
+        
+        // Clamp the progress between 0 and 1
+        progress = Math.min(1, Math.max(0, progress));
+
+        // Opacity should be 1 at the start of the fade, and 0 at the end
+        const newOpacity = 1 - progress;
+
+        // Apply the calculated opacity to the content
+        heroContent.style.opacity = newOpacity;
+
+
+        // --------------------------------------------------------
+        // 🔑 2. POSITION MANAGEMENT (Fixing/Pinning)
+        // --------------------------------------------------------
+        
+        if (scrollPosition >= heroTop && scrollPosition < releasePoint) {
+            // State 1: Content is FIXED (between heroTop and releasePoint)
+            heroSection.classList.add('is-fixed');
+            heroSection.classList.remove('is-pinned'); // Assuming you use 'is-pinned'
+        } 
+        else if (scrollPosition >= releasePoint) {
+            // State 2: Content is PINNED (scrolled past the releasePoint)
+            heroSection.classList.remove('is-fixed');
+            heroSection.classList.add('is-pinned');
+        }
+        else {
+            // State 3: Content is NORMAL (before heroTop)
+            heroSection.classList.remove('is-fixed');
+            heroSection.classList.remove('is-pinned');
+        }
+    }
+
+    // Attach the scroll handler
+    window.addEventListener('scroll', handleScroll);
+    
+    // Run once on load
+    handleScroll(); 
+});
     </script>
 </body>
 

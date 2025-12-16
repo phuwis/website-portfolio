@@ -82,6 +82,32 @@ nav {
     height: var(--header-h)
 }
 
+/* Ensure the list itself flows in a single line */
+#nav-menu {
+    display: flex; /* Make the list items flow nicely */
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    /* Crucial: Vertically align the text inside the UL to the center */
+    align-items: center;
+    height: 100%; /* Ensure UL takes full available height to align properly */
+}
+
+/* Crucial: Prevent the text inside each menu item from wrapping */
+#nav-menu li {
+text-align: center;
+}
+
+#nav-menu a {
+padding: 0px 4px;
+}
+
+@media (max-width:380px) {
+    #nav-menu a {
+        font-size: 14px;
+    }
+}
+
 .theme-toggle {
     background: transparent;
     border: 1px solid var(--border);
@@ -169,7 +195,39 @@ nav a:hover {
     justify-content: center;
     align-items: center;
     text-align: center;
-    padding: 4rem 1rem
+    padding: 4rem 1rem;
+    position: relative; 
+    z-index: 1; 
+    background-image: none; 
+}
+
+
+.hero::before {
+    content: ""; 
+    position: absolute; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('assets/images/7177985535ec83dc423241345facaaee.jpg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed; 
+    opacity: 0.3;
+    z-index: -1; 
+}
+
+.hero.is-fixed #hero-content {
+    position: fixed;
+    top: 50%; /* Center vertically in the viewport */
+    left: 50%; /* Center horizontally in the viewport */
+    transform: translate(-50%, -50%); /* Adjust for perfect centering */
+    width: 90%; /* Give it a manageable width */
+    max-width: 800px; /* Optional: control max size */
+    z-index: 100; /* Ensure it's above other scrolling content */ 
+    opacity: 1; 
+
 }
 
 .hero h1 {
